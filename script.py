@@ -7,6 +7,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from dotenv import load_dotenv
 from urllib.parse import urljoin
+from amazoncaptcha import AmazonCaptcha
 import time
 import os
 
@@ -36,13 +37,11 @@ RETRY_COUNT = 3
 # Language-specific labels
 LANGUAGE_LABELS = {
     "de": {
-        "cart_button": "In den Einkaufswagen",
         "delete_button": "Löschen",
         "empty_cart_message": "Ihr Amazon-Einkaufswagen ist leer",
         "thank_you_msg": "Vielen Dank",
     },
     "en": {
-        "cart_button": "Add to Cart",
         "delete_button": "Delete",
         "empty_cart_message": "Your Amazon Cart is empty",
         "thank_you_msg": "Thank you",
@@ -75,22 +74,26 @@ def detect_language(driver):
     return html.get_attribute("lang")  # Returns language code like "de", "en", etc.
 
 
-"""
 def check_and_solve_captcha(driver):
-    try:
-        # Look for CAPTCHA elements (common identifiers)
-        WebDriverWait(driver, 5).until(
-            EC.presence_of_element_located((By.ID, "captchacharacters"))
-        )
+    time.sleep(1)
+    captcha_input = driver.find_element(By.ID, "captchacharacters")
+    if captcha_input:
         print("CAPTCHA detected.")
 
-        captcha = AmazonCaptcha.fromdriver(driver)
-        captcha.solve()
+        image_src = driver.find_element(By.XPATH, "//form//img").get_attribute("src")
+
+        captcha = AmazonCaptcha.fromlink(image_src)
+        solution = captcha.solve()
+        if solution != "Not solved":
+            captcha_input.send_keys(solution)
+            captcha_input.submit()
+        else:
+            print("Couldn't solve the CAPTCHA.")
+            return False
 
         return True
-    except Exception:
-        return False
-"""
+    else:
+        return True
 
 
 # Log in to Amazon
@@ -323,6 +326,14 @@ def purchase(driver, product):
 # Main function
 def main():
     mainDriver = create_driver(False)
+
+    """
+    mainDriver.get(AMZ_URL)
+    check_and_solve_captcha(mainDriver)
+    time.sleep(10)
+    mainDriver.quit()
+    exit()
+    """
 
     if not login_to_amazon(mainDriver):
         mainDriver.quit()
