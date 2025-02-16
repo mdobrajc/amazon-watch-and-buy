@@ -21,13 +21,13 @@ Feel free to make changes to the code or use it in any way you like, however I a
 
 ## Prerequisites
 
-Install Python 3.11.9 from their [website](https://www.python.org/downloads/).
-Install selenium `pip install selenium`
-Install python-dotenv `pip install python-dotenv`
-Install amazoncaptcha `pip install amazoncaptcha`
-Download the corresponding WebDriver for your browser (Google -> ChromeDriver, Firefox -> GeckoDriver, Edge -> MsEdgeDriver)
-Put the driver into the script folder so it's easier to access.
-Make sure you have the "Buy now" button enabled on your account.
+- Install Python 3.11.9 from their [website](https://www.python.org/downloads/).
+- Install selenium `pip install selenium`
+- Install python-dotenv `pip install python-dotenv`
+- Install amazoncaptcha `pip install amazoncaptcha`
+- Download the corresponding WebDriver for your browser (Google -> ChromeDriver, Firefox -> GeckoDriver, Edge -> MsEdgeDriver)
+- Put the driver into the script folder so it's easier to access.
+- Make sure you have the "Buy now" button enabled on your account.
 
 ## Setting Up Environment Variables
 
